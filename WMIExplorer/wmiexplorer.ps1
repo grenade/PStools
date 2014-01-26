@@ -452,7 +452,7 @@ function frmInfo_Show {
   $pbImage.Image = $ico.ToBitmap()
   $pbImage.Location = New-Object Drawing.Point(16, 16)
   $pbImage.Size = New-Object Drawing.Size(32, 32)
-  $pbImage.SizeMode = "StretchImage"
+  $pbImage.SizeMode = [Windows.Forms.PictureBoxSizeMode]::StretchImage
   #
   #lblName
   #
@@ -479,9 +479,9 @@ function frmInfo_Show {
   $frmInfo.ClientSize = New-Object Drawing.Size(350, 110)
   $frmInfo.ControlBox = $false
   $frmInfo.Controls.AddRange(@($pbImage, $lblName, $lblCopy, $btnExit))
-  $frmInfo.FormBorderStyle = "FixedSingle"
+  $frmInfo.FormBorderStyle = [Windows.Forms.FormBorderStyle]::FixedSingle
   $frmInfo.ShowInTaskBar = $false
-  $frmInfo.StartPosition = "CenterParent"
+  $frmInfo.StartPosition = [Windows.Forms.FormStartPosition]::CenterParent
   $frmInfo.Text = "About..."
   $frmInfo.Add_Load($frmInfo_Load)
 
