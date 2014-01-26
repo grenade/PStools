@@ -483,7 +483,6 @@ function frmInfo_Show {
   $frmInfo.ShowInTaskBar = $false
   $frmInfo.StartPosition = [Windows.Forms.FormStartPosition]::CenterParent
   $frmInfo.Text = "About..."
-  $frmInfo.Add_Load($frmInfo_Load)
 
   [void]$frmInfo.ShowDialog()
 }
