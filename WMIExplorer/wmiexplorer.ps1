@@ -49,7 +49,7 @@ function frmMain_Show {
   #
   $bol1 = New-Object Drawing.Font("Tahoma", 9, [Drawing.FontStyle]::Bold)
   $bol2 = New-Object Drawing.Font("Tahoma", 8, [Drawing.FontStyle]::Bold)
-  $norm = New-Object DRawing.Font("Tahoma", 9, [Drawing.FontStyle]::Regular)
+  $norm = New-Object Drawing.Font("Tahoma", 9, [Drawing.FontStyle]::Regular)
   #
   #namespace picture
   #
