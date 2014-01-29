@@ -1,5 +1,9 @@
 #requires -version 2.0
 function Find-InstalledNETFrameworks {
+  <#
+    .NOTES
+        Author: greg zakharov
+  #>
   $asm = [PSObject].Assembly.GetType('System.Management.Automation.PsUtils')
   $dot = $asm.GetMethod('IsDotNetFrameworkVersionInstalled', [Reflection.BindingFlags]40)
   $asm.GetNestedType('FrameworkRegistryInstallation', 'NonPublic').GetFields(
