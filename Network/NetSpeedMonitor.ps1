@@ -6,6 +6,10 @@ function Set-Opacity([Object]$obj) {
 }
 
 function frmMain_Show {
+  <#
+    .NOTES
+        Author: greg zakharov
+  #>
   Add-Type -AssemblyName System.Windows.Forms
   [Windows.Forms.Application]::EnableVisualStyles()
   
