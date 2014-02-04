@@ -176,7 +176,7 @@ function frmMain_Show {
   #common
   #
   $mnuMain.Items.AddRange(@($mnuFile, $mnuView, $(
-    if (Test-Path (Join-Path $PSScriptRoot 'Plugins')) {$mnuPlug} else {$mnuHelp}
+    if (Test-Path ($dir = Join-Path $PSScriptRoot 'Plugins')) {$mnuPlug} else {$mnuHelp}
   ), $mnuHelp))
   $tsStrip.Items.AddRange(@($tsLabel, $tsWMask, $tsWLike))
   $tsLabel.Text = "Filter:"
@@ -248,12 +248,12 @@ function frmMain_Show {
   #
   #mnuPlug
   #
-  if (Test-Path ($dir = Join-Path $PSScriptRoot 'Plugins')) {
+  if (Test-Path $dir) {
     if ((gci $dir).Length -ne $null) {
       gci $dir | % {$dd = @()}{ #array of dropdown items
         if ([IO.Path]::GetExtension($_.FullName).Equals('.xml')) {
           $xml = [xml](cat $_.FullName)
-          $plg = New-Object Windows.Forms.ToolStripMenuItem $xml.WmiExplorerPlugin.InputObject #plugin initialization
+          $plg = New-Object Windows.Forms.ToolStripMenuItem $xml.WmiExplorerPlugin.InputObject
           $plg.Text = $xml.WmiExplorerPlugin.ObjectText #displaying text
           $plg.Add_Click([ScriptBlock]::Create($xml.WmiExplorerPlugin.Code)) #plugin code
           $dd += $plg
