@@ -1,4 +1,6 @@
 #requires -version 2.0
+set PSScriptRoot -val $(Split-Path $MyInvocation.MyCommand.Path) -opt Constant
+
 function Get-UserStatus {
   $script:usr = [Security.Principal.WindowsIdentity]::GetCurrent()
   return (New-Object Security.Principal.WindowsPrincipal $usr).IsInRole(
@@ -142,6 +144,7 @@ function frmMain_Show {
   $mnuView = New-Object Windows.Forms.ToolStripMenuItem
   $mnuTStr = New-Object Windows.Forms.ToolStripMenuItem
   $mnuSStr = New-Object Windows.Forms.ToolStripMenuItem
+  $mnuPlug = New-Object Windows.Forms.ToolStripMenuItem
   $mnuHelp = New-Object Windows.Forms.ToolStripMenuItem
   $mnuInfo = New-Object Windows.Forms.ToolStripMenuItem
   $tsStrip = New-Object Windows.Forms.ToolStrip
@@ -172,7 +175,9 @@ function frmMain_Show {
   #
   #common
   #
-  $mnuMain.Items.AddRange(@($mnuFile, $mnuView, $mnuHelp))
+  $mnuMain.Items.AddRange(@($mnuFile, $mnuView, $(
+    if (Test-Path (Join-Path $PSScriptRoot 'Plugins')) {$mnuPlug} else {$mnuHelp}
+  ), $mnuHelp))
   $tsStrip.Items.AddRange(@($tsLabel, $tsWMask, $tsWLike))
   $tsLabel.Text = "Filter:"
   $scSplt1, $scSplt2, $tabCtrl, $tvRoots, $lvList1, $lvList2, $rtbDesc | % {
@@ -240,6 +245,24 @@ function frmMain_Show {
     $mnuSStr.Checked = $toggle
     $sbStrip.Visible = $toggle
   })
+  #
+  #mnuPlug
+  #
+  if (Test-Path ($dir = Join-Path $PSScriptRoot 'Plugins')) {
+    if ((gci $dir).Length -ne $null) {
+      gci $dir | % {$dd = @()}{ #array of dropdown items
+        if ([IO.Path]::GetExtension($_.FullName).Equals('.xml')) {
+          $xml = [xml](cat $_.FullName)
+          $plg = New-Object Windows.Forms.ToolStripMenuItem $xml.WmiExplorerPlugin.InputObject #plugin initialization
+          $plg.Text = $xml.WmiExplorerPlugin.ObjectText #displaying text
+          $plg.Add_Click([ScriptBlock]::Create($xml.WmiExplorerPlugin.Code)) #plugin code
+          $dd += $plg
+        }
+      }
+      $mnuPlug.DropDownItems.AddRange($dd)
+    }
+  }
+  $mnuPlug.Text = "&Plugins"
   #
   #mnuHelp
   #
@@ -319,7 +342,12 @@ function frmMain_Show {
       
       (New-Object Management.ManagementClass($cur, $obj)
       ).PSBase.GetSubclasses($enm) | % {
-        $itm = $lvList1.Items.Add($_.Name, 1)
+        if ([String]::IsNullOrEmpty($tsWMask.Text)) {
+          $lvList1.Items.Add($_.Name, 1)
+        }
+        else {
+          if ($_.Name -like $tsWMask.Text) {$lvList1.Items.Add($_.Name, 1)}
+        }
       }
       $clone = ([Windows.Forms.ListViewItem[]]($lvList1.Items)).Clone()
       
@@ -459,7 +487,7 @@ function frmInfo_Show {
   $lblName.Font = $bol2
   $lblName.Location = New-Object Drawing.Point(53, 19)
   $lblName.Size = New-Object Drawing.Size(360, 18)
-  $lblName.Text = "WMI Explorer v2.37"
+  $lblName.Text = "WMI Explorer v2.39"
   #
   #lblCopy
   #
