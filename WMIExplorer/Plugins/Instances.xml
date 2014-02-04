@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <WmiExplorerPlugin>
   <PluginAuthor>greg zakharov</PluginAuthor>
-  <PluginVersion>1.01</PluginVersion>
+  <PluginDecription>Shows class instances.</PluginDecription>
+  <PluginVersion>1.02</PluginVersion>
   <InjectObject>$mnuInst</InjectObject>
   <ObjectText>&amp;Show Instances</ObjectText>
   <Code>
@@ -19,6 +20,7 @@
       $frmInst.ClientSize = New-Object Drawing.Size(530, 270)
       $frmInst.Controls.Add($rtbInst)
       $frmInst.Icon = $ico
+      $frmInst.ShowInTaskbar = $false
       $frmInst.StartPosition = [Windows.Forms.FormStartPosition]::CenterParent
       $frmInst.Text = "Instances"
       $frmInst.Add_Load({
